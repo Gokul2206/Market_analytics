@@ -9,7 +9,7 @@ st.title("Customer & Campaign Analytics")
 
 @st.cache_data
 def load_data():
-    return prep("data/marketing_data.csv", "data/marketing_data_dictionary.csv")
+    return prep("data/marketing_campaign_data.csv")
 
 df = load_data()
 
