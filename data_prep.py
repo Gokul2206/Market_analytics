@@ -6,6 +6,7 @@ import numpy as np
 # -----------------------------
 def load_data(data_path: str, dict_path: str = None) -> pd.DataFrame:
     df = pd.read_csv(data_path, low_memory=False)
+    df.columns = df.columns.str.strip()   # remove spaces around column names
     return df
 
 # -----------------------------
