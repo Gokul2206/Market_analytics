@@ -7,6 +7,7 @@ from data_prep import prep
 st.set_page_config(page_title="Marketing Analytics Dashboard", layout="wide")
 st.title("Customer & Campaign Analytics")
 
+# Cache the full pipeline
 @st.cache_data
 def load_data():
     return prep("data/marketing_campaign_data.csv")
@@ -15,14 +16,17 @@ df = load_data()
 
 # Sidebar filters
 st.sidebar.header("Filters")
-country = st.sidebar.multiselect("Country", sorted(df['Country'].unique()))
+country = st.sidebar.multiselect("Country", sorted(df['Country'].dropna().unique()))
 age_band = st.sidebar.multiselect("Age Band", sorted(df['Age_Band'].dropna().unique()))
 income_band = st.sidebar.multiselect("Income Band", sorted(df['Income_Band'].dropna().unique()))
 
-filtered = df.copy()
-if country: filtered = filtered[filtered['Country'].isin(country)]
-if age_band: filtered = filtered[filtered['Age_Band'].isin(age_band)]
-if income_band: filtered = filtered[filtered['Income_Band'].isin(income_band)]
+filtered = df
+if country:
+    filtered = filtered[filtered['Country'].isin(country)]
+if age_band:
+    filtered = filtered[filtered['Age_Band'].isin(age_band)]
+if income_band:
+    filtered = filtered[filtered['Income_Band'].isin(income_band)]
 
 # KPIs
 col1, col2, col3, col4 = st.columns(4)
@@ -51,7 +55,7 @@ with tab2:
 with tab3:
     st.subheader("Channel Usage")
     channels = ['NumWebPurchases','NumStorePurchases','NumCatalogPurchases','NumDealsPurchases']
-    st.write(filtered[channels].mean())
+    st.bar_chart(filtered[channels].mean())
 
 with tab4:
     st.subheader("Segment Response Lift")
